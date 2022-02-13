@@ -1,11 +1,11 @@
-package ${basePackage}.module.${modulePackage}.domain.entity;
+package ${basePackage}.module .${modulePackage}.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import ${basePackage}.common.domain.BaseEntity;
-#foreach ($entityImport in $entityImports)
-$entityImport
-#end
-import lombok.Data;
+        import com.baomidou.mybatisplus.annotation.TableName;
+        import ${basePackage}.common.domain.BaseEntityV2;
+    #foreach ($entityImport in $entityImports)
+        $entityImport
+    #end
+        import lombok.Data;
 
 /**
  * [ ${tableDesc} ]
@@ -17,17 +17,18 @@ import lombok.Data;
  * @date ${date}
  * @since JDK1.8
  */
-@Data
-@TableName("${tableName}")
-public class ${moduleClass}Entity extends BaseEntity{
-#foreach ($column in $columnList)
+        @Data
+        @TableName("${tableName}")
+        public class ${moduleClass}Entity extends BaseEntityV2{
+    #foreach ($column in $columnList)
 
-#if($column.columnName != 'id' && $column.fieldName != 'updateTime' && $column.fieldName != 'createTime')
-    /**
-     * $column.columnDesc
-     */
-    private $column.fieldType $column.fieldName;
-#end
-#end
+        #if($column.columnName != 'id' && $column.fieldName != 'updateTime' && $column.fieldName !=
+            'createTime' && $column.fieldName != 'createUser' && $column.fieldName != 'updateUser')
+                /**
+                 * $column.columnDesc
+                 */
+                private $column.fieldType $column.fieldName;
+        #end
+    #end
 
-}
+        }

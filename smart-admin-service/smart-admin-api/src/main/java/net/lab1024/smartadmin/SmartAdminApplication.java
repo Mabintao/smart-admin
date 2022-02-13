@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @copyright (c) 2019 1024lab.netInc. All rights reserved.
  * @date
  * @since JDK1.8
- *
  */
 @SpringBootApplication(scanBasePackages = {"net.lab1024.smartadmin", "cn.afterturn.easypoi"})
 @EnableCaching
@@ -25,5 +24,6 @@ public class SmartAdminApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SmartAdminApplication.class, args);
+        System.out.println("start application success url:http://localhost:10086/smart-admin-api/swagger-ui.html");
     }
 }

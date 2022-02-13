@@ -51,10 +51,11 @@ public class SwaggerTagConst {
     }
 
     /**
-     *  自定义分组2
+     * 自定义分组2
      */
     public static class Group2 {
-
+        public static final String ERP_SUPPLIERS = "供应商";
+        public static final String ERP_GOODS = "商品库";
 
     }
 

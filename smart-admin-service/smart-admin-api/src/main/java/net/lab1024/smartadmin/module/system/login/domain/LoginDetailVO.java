@@ -35,7 +35,7 @@ public class LoginDetailVO {
     private String idCard;
 
     @ApiModelProperty("出生日期")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     @ApiModelProperty("创建者id")

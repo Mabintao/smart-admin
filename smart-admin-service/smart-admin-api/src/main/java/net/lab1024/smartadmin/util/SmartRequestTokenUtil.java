@@ -6,6 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author yandanyang
  * @version 1.0
@@ -46,6 +47,14 @@ public class SmartRequestTokenUtil {
             return null;
         }
         return requestUser.getRequestUserId();
+    }
+
+    public static String getLoginName() {
+        RequestTokenBO requestUser = getRequestUser();
+        if (requestUser == null) {
+            return null;
+        }
+        return requestUser.getEmployeeBO().getLoginName();
     }
 
 }

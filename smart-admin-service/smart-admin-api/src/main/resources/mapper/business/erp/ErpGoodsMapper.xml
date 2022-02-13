@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpGoodsDao">
+
+    <resultMap id="ErpGoodsVO" type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsVO"></resultMap>
+    <resultMap id="ErpGoodsExcelVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsExcelVO"></resultMap>
+
+
+    <select id="queryByPage" resultMap="ErpGoodsVO">
+        select
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        main_goods_id,
+        weight,
+        coefficient,
+        name,
+        stock,
+        status,
+        purchase_price,
+        order_num
+        from t_erp_goods
+        <where>
+            <if test="queryDTO.id != null and queryDTO.id != ''">
+                AND INSTR(id,#{queryDTO.id})
+            </if>
+        </where>
+    </select>
+
+    <select id="queryAllExportData" resultMap="ErpGoodsExcelVO">
+        select
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        main_goods_id,
+        weight,
+        coefficient,
+        name,
+        stock,
+        status,
+        purchase_price,
+        order_num
+        from t_erp_goods
+        <where>
+            <if test="queryDTO.id != null and queryDTO.id != ''">
+                AND INSTR(id,#{queryDTO.id})
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBatchExportData" resultMap="ErpGoodsExcelVO">
+        select
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        main_goods_id,
+        weight,
+        coefficient,
+        name,
+        stock,
+        status,
+        purchase_price,
+        order_num
+        from t_erp_goods
+        where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteById">
+        delete
+        from t_erp_goods
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByIdList">
+        delete from t_erp_goods where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,14 +1,14 @@
 package net.lab1024.smartadmin.module.support.codegenerator.service;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.smartadmin.module.support.codegenerator.dao.TableDao;
 import net.lab1024.smartadmin.module.support.codegenerator.domain.CodeGeneratorDTO;
 import net.lab1024.smartadmin.module.support.codegenerator.domain.CodeGeneratorQueryColumnDTO;
 import net.lab1024.smartadmin.module.support.codegenerator.domain.ColumnVO;
 import net.lab1024.smartadmin.module.support.codegenerator.domain.QueryFieldVO;
 import net.lab1024.smartadmin.util.SmartDateUtil;
-import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
 import net.lab1024.smartadmin.util.SmartStringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.WordUtils;
@@ -18,11 +18,11 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -173,7 +173,7 @@ public class CodeGeneratorService {
             }
             FileWriter writer;
             try {
-                writer = new FileWriter(filePath);
+                writer = new FileWriter(filePath, StandardCharsets.UTF_8);
                 Template tpl = Velocity.getTemplate(template, "UTF-8");
                 tpl.merge(context, writer);
                 writer.flush();

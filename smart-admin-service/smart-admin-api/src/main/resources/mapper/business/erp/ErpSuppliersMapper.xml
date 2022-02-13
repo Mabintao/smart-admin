@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSuppliersDao">
+
+    <resultMap id="ErpSuppliersVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSuppliersVO"></resultMap>
+    <resultMap id="ErpSuppliersExcelVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSuppliersExcelVO"></resultMap>
+
+
+    <select id="queryByPage" resultMap="ErpSuppliersVO">
+        select
+        id,
+        name,
+        url,
+        create_time,
+        create_user
+        from t_erp_suppliers
+        <where>
+            <if test="queryDTO.name != null and queryDTO.name != ''">
+                AND INSTR(name,#{queryDTO.name})
+            </if>
+        </where>
+    </select>
+
+    <select id="queryAllExportData" resultMap="ErpSuppliersExcelVO">
+        select
+        id,
+        name,
+        url,
+        create_time,
+        create_user
+        from t_erp_suppliers
+        <where>
+            <if test="queryDTO.name != null and queryDTO.name != ''">
+                AND INSTR(name,#{queryDTO.name})
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBatchExportData" resultMap="ErpSuppliersExcelVO">
+        select
+        id,
+        name,
+        url,
+        create_time,
+        create_user
+        from t_erp_suppliers
+        where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteById">
+        delete
+        from t_erp_suppliers
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByIdList">
+        delete from t_erp_suppliers where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
