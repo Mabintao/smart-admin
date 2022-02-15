@@ -1,3 +1,0 @@
-[2022-02-08 20:52:26,497][ERROR][main] testWhileIdle is true, validationQuery not set (DruidDataSource.java:1213)
-[2022-02-08 20:52:39,973][ERROR][smartreload-1-thread-1] <<SmartReloadManager>> register duplicated tag reload : system_config , and it will be cover! (SmartReloadConfig.java:35)
-[2022-02-08 23:11:31,744][ERROR][main] testWhileIdle is true, validationQuery not set (DruidDataSource.java:1213)

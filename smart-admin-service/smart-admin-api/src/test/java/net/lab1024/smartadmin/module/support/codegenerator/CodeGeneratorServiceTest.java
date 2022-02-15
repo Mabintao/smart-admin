@@ -32,7 +32,7 @@ public class CodeGeneratorServiceTest extends BaseTest {
 
         //搜索字段 kind， 使用like搜索
         CodeGeneratorQueryColumnDTO column1 = CodeGeneratorQueryColumnDTO.builder()
-                .columnName("id")
+                .columnName("id" )
                 .sqlOperate(SqlOperateTypeEnum.LIKE).build();
 //        //搜索字段 kind， 使用 == 搜索
 //        CodeGeneratorQueryColumnDTO id = CodeGeneratorQueryColumnDTO.builder()
@@ -50,12 +50,12 @@ public class CodeGeneratorServiceTest extends BaseTest {
         List<CodeGeneratorQueryColumnDTO> queryColumnList = Lists.newArrayList(column1);
 
         CodeGeneratorDTO codeGenerator = CodeGeneratorDTO.builder()
-                .author("matt")//class 注释作者
-                .company("小马ERP")//class注释公司名字
-                .tableName("t_erp_goods")//表名
-                .tablePrefix("t_")//表名前缀
-                .basePackage("net.lab1024.smartadmin")//包名
-                .modulePackage("business.erp")//业务子包名
+                .author("matt" )//class 注释作者
+                .company("小马ERP" )//class注释公司名字
+                .tableName("t_erp_spec" )//表名
+                .tablePrefix("t_" )//表名前缀
+                .basePackage("net.lab1024.smartadmin" )//包名
+                .modulePackage("business.erp" )//业务子包名
                 .queryColumnList(queryColumnList)//加入搜搜字段
                 .build();//构建
 

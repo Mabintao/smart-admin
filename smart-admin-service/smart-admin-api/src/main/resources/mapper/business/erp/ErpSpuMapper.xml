@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSpuDao">
+
+    <resultMap id="ErpSpuVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuVO"></resultMap>
+    <resultMap id="ErpSpuExcelVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuExcelVO"></resultMap>
+
+
+    <select id="queryByPage" resultMap="ErpSpuVO">
+        select
+                                    id,
+                                                create_time,
+                                                create_user,
+                                                update_time,
+                                                update_user,
+                                                advantages,
+                                                shelf_layers
+                            from t_erp_spu
+        <where>
+                                                <if test="queryDTO.id != null and queryDTO.id != ''">
+                        AND INSTR(id,#{queryDTO.id})
+                    </if>
+                                                                    </where>
+    </select>
+
+    <select id="queryAllExportData" resultMap="ErpSpuExcelVO">
+        select
+                                    id,
+                                                create_time,
+                                                create_user,
+                                                update_time,
+                                                update_user,
+                                                advantages,
+                                                shelf_layers
+                            from t_erp_spu
+        <where>
+                                                <if test="queryDTO.id != null and queryDTO.id != ''">
+                        AND INSTR(id,#{queryDTO.id})
+                    </if>
+                                                                    </where>
+    </select>
+
+    <select id="queryBatchExportData" resultMap="ErpSpuExcelVO">
+        select
+                                    id,
+                                                create_time,
+                                                create_user,
+                                                update_time,
+                                                update_user,
+                                                advantages,
+                                                shelf_layers
+                            from t_erp_spu
+        where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteById">
+        delete
+        from t_erp_spu where id = #{id}
+    </delete>
+
+    <delete id="deleteByIdList">
+        delete from t_erp_spu where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

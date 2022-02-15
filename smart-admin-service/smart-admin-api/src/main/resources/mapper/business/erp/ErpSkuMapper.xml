@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao">
+
+    <resultMap id="ErpSkuVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO"></resultMap>
+    <resultMap id="ErpSkuExcelVO"
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuExcelVO"></resultMap>
+
+
+    <select id="queryByPage" resultMap="ErpSkuVO">
+        select
+                                    id,
+                                                create_user,
+                                                create_time,
+                                                update_user,
+                                                update_time,
+                                                spu_id,
+                                                attr,
+                                                attr_value
+                            from t_erp_sku
+        <where>
+                                                <if test="queryDTO.id != null and queryDTO.id != ''">
+                        AND INSTR(id,#{queryDTO.id})
+                    </if>
+                                                                    </where>
+    </select>
+
+    <select id="queryAllExportData" resultMap="ErpSkuExcelVO">
+        select
+                                    id,
+                                                create_user,
+                                                create_time,
+                                                update_user,
+                                                update_time,
+                                                spu_id,
+                                                attr,
+                                                attr_value
+                            from t_erp_sku
+        <where>
+                                                <if test="queryDTO.id != null and queryDTO.id != ''">
+                        AND INSTR(id,#{queryDTO.id})
+                    </if>
+                                                                    </where>
+    </select>
+
+    <select id="queryBatchExportData" resultMap="ErpSkuExcelVO">
+        select
+                                    id,
+                                                create_user,
+                                                create_time,
+                                                update_user,
+                                                update_time,
+                                                spu_id,
+                                                attr,
+                                                attr_value
+                            from t_erp_sku
+        where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteById">
+        delete
+        from t_erp_sku where id = #{id}
+    </delete>
+
+    <delete id="deleteByIdList">
+        delete from t_erp_sku where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
