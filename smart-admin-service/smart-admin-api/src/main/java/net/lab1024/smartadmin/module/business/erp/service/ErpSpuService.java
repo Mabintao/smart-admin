@@ -9,7 +9,6 @@ import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSpuAddDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSpuQueryDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSpuUpdateDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpSpuEntity;
-import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuExcelVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuVO;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * [  ]
@@ -53,25 +51,25 @@ public class ErpSpuService {
      * @author matt
      * @date 2022-02-13 18:39:02
      */
-    public ResponseDTO<PageResultDTO<ErpSpuVO>> queryByPage(ErpSpuQueryDTO queryDTO) {
+    public PageResultDTO<ErpSpuVO> queryByPage(ErpSpuQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         IPage<ErpSpuVO> voList = erpSpuDao.queryByPage(page, queryDTO);
 
-        // 补充规格商品的信息
-        List<String> spuIds = voList.getRecords().stream()
-                .map(ErpSpuVO::getId).collect(Collectors.toList());
-        List<ErpSpecVO> specs = erpSpecService.getBySpuIds(spuIds);
-
-        voList.getRecords().forEach(p -> {
-            List<ErpSpecVO> curSpecs = specs.stream()
-                    .filter(q -> q.getSpuId().equals(p.getId()))
-                    .collect(Collectors.toList());
-
-            p.setSpecs(curSpecs);
-        });
+//        // 补充规格商品的信息
+//        List<String> spuIds = voList.getRecords().stream()
+//                .map(ErpSpuVO::getId).collect(Collectors.toList());
+//        List<ErpSpecVO> specs = erpSpecService.getBySpuIds(spuIds);
+//
+//        voList.getRecords().forEach(p -> {
+//            List<ErpSpecVO> curSpecs = specs.stream()
+//                    .filter(q -> q.getSpuId().equals(p.getId()))
+//                    .collect(Collectors.toList());
+//
+//            p.setSpecs(curSpecs);
+//        });
 
         PageResultDTO<ErpSpuVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
-        return ResponseDTO.succData(pageResultDTO);
+        return pageResultDTO;
     }
 
     /**

@@ -24,7 +24,7 @@ public class SmartSeleniumUtil {
         ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless" );
         options.addArguments("user-agent=" + getRandomUA());
-//        options.addArguments("--user-data-dir=" + "Users/mabintao/Library/Application Support/Google/Chrome/Default" );
+        options.addArguments("--proxy-server=http://127.0.0.1:9091" );
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation" ));
         options.setExperimentalOption("useAutomationExtension", false);
         ChromeDriver driver = new ChromeDriver(options);
@@ -38,11 +38,7 @@ public class SmartSeleniumUtil {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        String script = "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})";
-        driver.executeScript(script);
         driver.get(url);
-        driver.executeScript(script);
     }
 
     public static void taoBaoLogin(ChromeDriver driver) {

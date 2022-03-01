@@ -1,24 +1,23 @@
 package net.lab1024.smartadmin.module.business.erp.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.erp.dao.ErpGoodsDao;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsAddDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsQueryDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsUpdateDTO;
+import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSpuQueryDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpGoodsEntity;
-import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsExcelVO;
-import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsVO;
+import net.lab1024.smartadmin.module.business.erp.domain.vo.*;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
-import net.lab1024.smartadmin.util.SmartPageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * [  ]
@@ -32,6 +31,66 @@ import java.util.List;
  */
 @Service
 public class ErpGoodsService {
+
+    // 商品规格
+    @Autowired
+    private ErpSkuService skuService;
+
+    // 主商品
+    @Autowired
+    private ErpSpuService spuService;
+
+    // 子商品
+    @Autowired
+    private ErpSpecService specService;
+
+    /**
+     * 商品-分页查询
+     *
+     * @param queryDTO
+     * @return
+     */
+    public PageResultDTO<ErpGoodsVO> queryByPage(ErpGoodsQueryDTO queryDTO) {
+        // 查询主商品信息
+        ErpSpuQueryDTO spuQueryDTO = SmartBeanUtil.copy(queryDTO, ErpSpuQueryDTO.class);
+        PageResultDTO<ErpSpuVO> spuPageResult = spuService.queryByPage(spuQueryDTO);
+
+        // 获取所有的商品ID，关联查询规格以及子商品
+        List<String> spuIds = spuPageResult.getList().stream()
+                .map(ErpSpuVO::getId)
+                .collect(Collectors.toList());
+
+        List<ErpSpecVO> specList = specService.getBySpuIds(spuIds);
+        List<ErpSkuVO> skuList = skuService.getBySpuIds(spuIds);
+
+        List<ErpGoodsVO> goodList = new ArrayList<>();
+        for (ErpSpuVO spu : spuPageResult.getList()) {
+            ErpGoodsVO good = new ErpGoodsVO();
+            good.setSpu(spu);
+
+            List<ErpSpecVO> curSpecList = specList.stream()
+                    .filter(p -> p.getSpuId().equals(spu.getId()))
+                    .collect(Collectors.toList());
+            good.setSpecs(curSpecList);
+
+            List<ErpSkuVO> curSkuList = skuList.stream()
+                    .filter(p -> p.getSpuId().equals(spu.getId()))
+                    .collect(Collectors.toList());
+
+            good.setSkus(curSkuList);
+        }
+
+        // 构造返回数据，补充子商品信息以及规格信息
+        PageResultDTO<ErpGoodsVO> ret = new PageResultDTO<>();
+        ret.setPageNum(spuPageResult.getPageNum());
+        ret.setPages(spuPageResult.getPages());
+        ret.setPageSize(spuPageResult.getPageSize());
+        ret.setTotal(spuPageResult.getTotal());
+        ret.setList(goodList);
+
+        return ret;
+    }
+    
 
     @Autowired
     private ErpGoodsDao erpGoodsDao;
@@ -54,19 +113,6 @@ public class ErpGoodsService {
         queryWrapper.in(ErpGoodsEntity::getMainGoodsId, ids);
         List<ErpGoodsEntity> result = erpGoodsDao.selectList(queryWrapper);
         return SmartBeanUtil.copyList(result, ErpGoodsVO.class);
-    }
-
-    /**
-     * 分页查询
-     *
-     * @author matt
-     * @date 2022-02-08 23:11:43
-     */
-    public ResponseDTO<PageResultDTO<ErpGoodsVO>> queryByPage(ErpGoodsQueryDTO queryDTO) {
-        Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        IPage<ErpGoodsVO> voList = erpGoodsDao.queryByPage(page, queryDTO);
-        PageResultDTO<ErpGoodsVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
-        return ResponseDTO.succData(pageResultDTO);
     }
 
     /**

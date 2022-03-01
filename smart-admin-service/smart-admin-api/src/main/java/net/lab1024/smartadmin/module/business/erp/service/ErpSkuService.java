@@ -1,18 +1,19 @@
 package net.lab1024.smartadmin.module.business.erp.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuAddDTO;
-import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuUpdateDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuQueryDTO;
+import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuUpdateDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpSkuEntity;
-import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuExcelVO;
-import net.lab1024.smartadmin.util.SmartPageUtil;
+import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
+import net.lab1024.smartadmin.util.SmartPageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +39,27 @@ public class ErpSkuService {
     /**
      * 根据id查询
      */
-    public ErpSkuEntity getById(Long id){
-        return  erpSkuDao.selectById(id);
+    public ErpSkuEntity getById(Long id) {
+        return erpSkuDao.selectById(id);
     }
 
     /**
+     * 查询多个spu_id下的所有商品属性
+     *
+     * @param spuIds
+     * @return
+     */
+    public List<ErpSkuVO> getBySpuIds(List<String> spuIds) {
+        LambdaQueryWrapper<ErpSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ErpSkuEntity::getSpuId, spuIds);
+        List<ErpSkuEntity> result = erpSkuDao.selectList(queryWrapper);
+        return SmartBeanUtil.copyList(result, ErpSkuVO.class);
+    }
+
+
+    /**
      * 分页查询
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
@@ -56,6 +72,7 @@ public class ErpSkuService {
 
     /**
      * 添加
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
@@ -67,6 +84,7 @@ public class ErpSkuService {
 
     /**
      * 编辑
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
@@ -79,6 +97,7 @@ public class ErpSkuService {
 
     /**
      * 删除
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
@@ -90,15 +109,17 @@ public class ErpSkuService {
 
     /**
      * 查询全部导出对象
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
     public List<ErpSkuExcelVO> queryAllExportData(ErpSkuQueryDTO queryDTO) {
-        return erpSkuDao.queryAllExportData( queryDTO);
+        return erpSkuDao.queryAllExportData(queryDTO);
     }
 
     /**
      * 批量查询导出对象
+     *
      * @author matt
      * @date 2022-02-13 18:39:29
      */
