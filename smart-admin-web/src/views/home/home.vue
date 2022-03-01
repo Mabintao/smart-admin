@@ -50,10 +50,10 @@
     </Row>
 
 
-  <Modal
+  <!-- <Modal
         v-model="adModal" width="800">
         <Ad/>
-    </Modal>
+    </Modal> -->
 
   </div>
 </template>

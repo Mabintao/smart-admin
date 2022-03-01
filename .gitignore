@@ -18,6 +18,10 @@ target/
 *.iws
 *.iml
 *.ipr
+/smart-admin-service/logs/
+/smart-admin-service/smart-admin-api/logs/
+/smart-admin-service/smart-admin-api/target/*
+/smart-admin-service/smart-admin-api/Users/*
 
 ### NetBeans ###
 /nbproject/private/
