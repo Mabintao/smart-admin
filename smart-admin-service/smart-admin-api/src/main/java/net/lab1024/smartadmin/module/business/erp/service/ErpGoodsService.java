@@ -34,7 +34,7 @@ public class ErpGoodsService {
 
     // 商品规格
     @Autowired
-    private ErpSkuService skuService;
+    private ErpSpecService skuService;
 
     // 主商品
     @Autowired
@@ -42,7 +42,7 @@ public class ErpGoodsService {
 
     // 子商品
     @Autowired
-    private ErpSpecService specService;
+    private ErpSkuService specService;
 
     /**
      * 商品-分页查询
@@ -50,7 +50,7 @@ public class ErpGoodsService {
      * @param queryDTO
      * @return
      */
-    public PageResultDTO<ErpGoodsVO> queryByPage(ErpGoodsQueryDTO queryDTO) {
+    public ResponseDTO<PageResultDTO<ErpGoodsVO>> queryByPage(ErpGoodsQueryDTO queryDTO) {
         // 查询主商品信息
         ErpSpuQueryDTO spuQueryDTO = SmartBeanUtil.copy(queryDTO, ErpSpuQueryDTO.class);
         PageResultDTO<ErpSpuVO> spuPageResult = spuService.queryByPage(spuQueryDTO);
@@ -60,20 +60,20 @@ public class ErpGoodsService {
                 .map(ErpSpuVO::getId)
                 .collect(Collectors.toList());
 
-        List<ErpSpecVO> specList = specService.getBySpuIds(spuIds);
-        List<ErpSkuVO> skuList = skuService.getBySpuIds(spuIds);
+        List<ErpSkuVO> specList = specService.getBySpuIds(spuIds);
+        List<ErpSpecVO> skuList = skuService.getBySpuIds(spuIds);
 
         List<ErpGoodsVO> goodList = new ArrayList<>();
         for (ErpSpuVO spu : spuPageResult.getList()) {
             ErpGoodsVO good = new ErpGoodsVO();
             good.setSpu(spu);
 
-            List<ErpSpecVO> curSpecList = specList.stream()
+            List<ErpSkuVO> curSpecList = specList.stream()
                     .filter(p -> p.getSpuId().equals(spu.getId()))
                     .collect(Collectors.toList());
             good.setSpecs(curSpecList);
 
-            List<ErpSkuVO> curSkuList = skuList.stream()
+            List<ErpSpecVO> curSkuList = skuList.stream()
                     .filter(p -> p.getSpuId().equals(spu.getId()))
                     .collect(Collectors.toList());
 
@@ -88,9 +88,9 @@ public class ErpGoodsService {
         ret.setTotal(spuPageResult.getTotal());
         ret.setList(goodList);
 
-        return ret;
+        return ResponseDTO.succData(ret);
     }
-    
+
 
     @Autowired
     private ErpGoodsDao erpGoodsDao;

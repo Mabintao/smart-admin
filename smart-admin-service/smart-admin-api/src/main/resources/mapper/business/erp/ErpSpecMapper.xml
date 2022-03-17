@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSpecDao">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao">
 
     <resultMap id="ErpSpecVO"
-               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecVO"></resultMap>
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO"></resultMap>
     <resultMap id="ErpSpecExcelVO"
-               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecExcelVO"></resultMap>
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuExcelVO"></resultMap>
 
 
     <select id="queryByPage" resultMap="ErpSpecVO">
         select
-                                    id,
-                                                create_user,
-                                                create_time,
-                                                update_user,
-                                                update_time,
-                                                spu_id,
-                                                weight,
-                                                coefficient,
-                                                attr,
-                                                stock,
-                                                status,
-                                                purchase_price,
-                                                order_num,
-                                                attr_ids
-                            from t_erp_spec
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        spu_id,
+        weight,
+        coefficient,
+        attr,
+        stock,
+        status,
+        purchase_price,
+        order_num,
+        attr_ids
+        from t_erp_spec
         <where>
-                                                <if test="queryDTO.id != null and queryDTO.id != ''">
-                        AND INSTR(id,#{queryDTO.id})
-                    </if>
-                                                                    </where>
+            <if test="queryDTO.id != null and queryDTO.id != ''">
+                AND INSTR(id,#{queryDTO.id})
+            </if>
+        </where>
     </select>
 
     <select id="queryAllExportData" resultMap="ErpSpecExcelVO">
         select
-                                    id,
-                                                create_user,
-                                                create_time,
-                                                update_user,
-                                                update_time,
-                                                spu_id,
-                                                weight,
-                                                coefficient,
-                                                attr,
-                                                stock,
-                                                status,
-                                                purchase_price,
-                                                order_num,
-                                                attr_ids
-                            from t_erp_spec
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        spu_id,
+        weight,
+        coefficient,
+        attr,
+        stock,
+        status,
+        purchase_price,
+        order_num,
+        attr_ids
+        from t_erp_spec
         <where>
-                                                <if test="queryDTO.id != null and queryDTO.id != ''">
-                        AND INSTR(id,#{queryDTO.id})
-                    </if>
-                                                                    </where>
+            <if test="queryDTO.id != null and queryDTO.id != ''">
+                AND INSTR(id,#{queryDTO.id})
+            </if>
+        </where>
     </select>
 
     <select id="queryBatchExportData" resultMap="ErpSpecExcelVO">
         select
-                                    id,
-                                                create_user,
-                                                create_time,
-                                                update_user,
-                                                update_time,
-                                                spu_id,
-                                                weight,
-                                                coefficient,
-                                                attr,
-                                                stock,
-                                                status,
-                                                purchase_price,
-                                                order_num,
-                                                attr_ids
-                            from t_erp_spec
+        id,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        spu_id,
+        weight,
+        coefficient,
+        attr,
+        stock,
+        status,
+        purchase_price,
+        order_num,
+        attr_ids
+        from t_erp_spec
         where id in
         <foreach collection="idList" open="(" close=")" separator="," item="item">
             #{item}
@@ -81,7 +81,8 @@
 
     <delete id="deleteById">
         delete
-        from t_erp_spec where id = #{id}
+        from t_erp_spec
+        where id = #{id}
     </delete>
 
     <delete id="deleteByIdList">

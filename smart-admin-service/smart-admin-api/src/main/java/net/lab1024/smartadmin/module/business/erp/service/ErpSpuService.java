@@ -36,7 +36,7 @@ public class ErpSpuService {
     private ErpSpuDao erpSpuDao;
 
     @Autowired
-    private ErpSpecService erpSpecService;
+    private ErpSkuService erpSpecService;
 
     /**
      * 根据id查询

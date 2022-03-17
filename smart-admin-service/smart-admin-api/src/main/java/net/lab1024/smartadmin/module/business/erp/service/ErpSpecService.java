@@ -27,39 +27,45 @@ import java.util.List;
  * @version 1.0
  * @company 小马ERP
  * @copyright (c)  小马ERPInc. All rights reserved.
- * @date 2022-02-13 18:40:06
+ * @date 2022-02-13 18:39:29
  * @since JDK1.8
  */
 @Service
 public class ErpSpecService {
 
     @Autowired
-    private ErpSpecDao erpSpecDao;
+    private ErpSpecDao erpSkuDao;
 
     /**
      * 根据id查询
      */
     public ErpSpecEntity getById(Long id) {
-        return erpSpecDao.selectById(id);
+        return erpSkuDao.selectById(id);
     }
 
-
-    public List<ErpSpecVO> getBySpuIds(List<String> ids) {
+    /**
+     * 查询多个spu_id下的所有商品属性
+     *
+     * @param spuIds
+     * @return
+     */
+    public List<ErpSpecVO> getBySpuIds(List<String> spuIds) {
         LambdaQueryWrapper<ErpSpecEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(ErpSpecEntity::getSpuId, ids);
-        List<ErpSpecEntity> result = erpSpecDao.selectList(queryWrapper);
+        queryWrapper.in(ErpSpecEntity::getSpuId, spuIds);
+        List<ErpSpecEntity> result = erpSkuDao.selectList(queryWrapper);
         return SmartBeanUtil.copyList(result, ErpSpecVO.class);
     }
+
 
     /**
      * 分页查询
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     public ResponseDTO<PageResultDTO<ErpSpecVO>> queryByPage(ErpSpecQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        IPage<ErpSpecVO> voList = erpSpecDao.queryByPage(page, queryDTO);
+        IPage<ErpSpecVO> voList = erpSkuDao.queryByPage(page, queryDTO);
         PageResultDTO<ErpSpecVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
         return ResponseDTO.succData(pageResultDTO);
     }
@@ -68,11 +74,11 @@ public class ErpSpecService {
      * 添加
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     public ResponseDTO<String> add(ErpSpecAddDTO addDTO) {
         ErpSpecEntity entity = SmartBeanUtil.copy(addDTO, ErpSpecEntity.class);
-        erpSpecDao.insert(entity);
+        erpSkuDao.insert(entity);
         return ResponseDTO.succ();
     }
 
@@ -80,12 +86,12 @@ public class ErpSpecService {
      * 编辑
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> update(ErpSpecUpdateDTO updateDTO) {
         ErpSpecEntity entity = SmartBeanUtil.copy(updateDTO, ErpSpecEntity.class);
-        erpSpecDao.updateById(entity);
+        erpSkuDao.updateById(entity);
         return ResponseDTO.succ();
     }
 
@@ -93,11 +99,11 @@ public class ErpSpecService {
      * 删除
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> deleteByIds(List<Long> idList) {
-        erpSpecDao.deleteByIdList(idList);
+        erpSkuDao.deleteByIdList(idList);
         return ResponseDTO.succ();
     }
 
@@ -105,19 +111,19 @@ public class ErpSpecService {
      * 查询全部导出对象
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     public List<ErpSpecExcelVO> queryAllExportData(ErpSpecQueryDTO queryDTO) {
-        return erpSpecDao.queryAllExportData(queryDTO);
+        return erpSkuDao.queryAllExportData(queryDTO);
     }
 
     /**
      * 批量查询导出对象
      *
      * @author matt
-     * @date 2022-02-13 18:40:06
+     * @date 2022-02-13 18:39:29
      */
     public List<ErpSpecExcelVO> queryBatchExportData(List<Long> idList) {
-        return erpSpecDao.queryBatchExportData(idList);
+        return erpSkuDao.queryBatchExportData(idList);
     }
 }

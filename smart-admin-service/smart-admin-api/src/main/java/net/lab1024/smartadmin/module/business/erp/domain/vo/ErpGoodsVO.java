@@ -21,8 +21,8 @@ public class ErpGoodsVO {
     private ErpSpuVO spu;
 
     @ApiModelProperty("商品")
-    private List<ErpSpecVO> specs;
+    private List<ErpSkuVO> specs;
 
     @ApiModelProperty("商品规格")
-    private List<ErpSkuVO> skus;
+    private List<ErpSpecVO> skus;
 }
