@@ -61,7 +61,7 @@ public class SmartAuthenticationInterceptor extends HandlerInterceptorAdapter {
         //跨域设置
         this.crossDomainConfig(response);
         boolean isHandlerMethod = handler instanceof HandlerMethod;
-        if (! isHandlerMethod) {
+        if (!isHandlerMethod) {
             return true;
         }
 
@@ -117,7 +117,7 @@ public class SmartAuthenticationInterceptor extends HandlerInterceptorAdapter {
         }
         //需要验证权限
         Boolean privilegeValidPass = privilegeEmployeeService.checkEmployeeHavePrivilege(requestToken, controllerName, methodName);
-        if (! privilegeValidPass) {
+        if (!privilegeValidPass) {
             this.outputResult(response, LoginResponseCodeConst.NOT_HAVE_PRIVILEGES);
             return false;
         }

@@ -44,9 +44,9 @@ public class ErpSkuService {
     }
 
 
-    public List<ErpSkuVO> getBySpuIds(List<String> ids) {
+    public List<ErpSkuVO> getBySpuIds(List<String> spuIds) {
         LambdaQueryWrapper<ErpSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(ErpSkuEntity::getSpuId, ids);
+        queryWrapper.in(ErpSkuEntity::getSpuId, spuIds);
         List<ErpSkuEntity> result = erpSpecDao.selectList(queryWrapper);
         return SmartBeanUtil.copyList(result, ErpSkuVO.class);
     }

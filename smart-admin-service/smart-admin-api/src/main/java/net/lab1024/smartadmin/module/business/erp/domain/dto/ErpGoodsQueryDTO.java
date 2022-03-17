@@ -16,7 +16,6 @@ import net.lab1024.smartadmin.common.domain.PageParamDTO;
  */
 @Data
 public class ErpGoodsQueryDTO extends PageParamDTO {
-
     @ApiModelProperty("规格ID")
     private String id;
 }

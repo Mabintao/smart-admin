@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * [  ]
@@ -52,6 +54,41 @@ public class ErpSpecService {
     public List<ErpSpecVO> getBySpuIds(List<String> spuIds) {
         LambdaQueryWrapper<ErpSpecEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(ErpSpecEntity::getSpuId, spuIds);
+        List<ErpSpecEntity> result = erpSkuDao.selectList(queryWrapper);
+        Map<String, List<ErpSpecEntity>> groupByData = result.stream()
+                .collect(Collectors.groupingBy(ErpSpecEntity::getSpuId));
+
+        List<ErpSpecVO> ret = groupByData.values().stream()
+                .map(this::convertSpecVo).collect(Collectors.toList());
+
+        return ret;
+    }
+
+    private ErpSpecVO convertSpecVo(List<ErpSpecEntity> list) {
+        ErpSpecVO ret = new ErpSpecVO();
+        if (list.isEmpty()) {
+            return ret;
+        }
+
+        ret.setSpuId(list.get(0).getSpuId());
+        Map<String, List<String>> attrs = list.stream()
+                .collect(Collectors.groupingBy(ErpSpecEntity::getAttr,
+                        Collectors.mapping(ErpSpecEntity::getAttrValue, Collectors.toList())));
+
+        ret.setAttrs(attrs);
+
+        return ret;
+    }
+
+    /**
+     * 主键获取
+     *
+     * @param ids
+     * @return
+     */
+    public List<ErpSpecVO> getByIds(List<String> ids) {
+        LambdaQueryWrapper<ErpSpecEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ErpSpecEntity::getId, ids);
         List<ErpSpecEntity> result = erpSkuDao.selectList(queryWrapper);
         return SmartBeanUtil.copyList(result, ErpSpecVO.class);
     }

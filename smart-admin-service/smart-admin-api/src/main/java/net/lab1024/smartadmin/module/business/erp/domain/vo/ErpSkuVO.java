@@ -62,5 +62,7 @@ public class ErpSkuVO {
     @ApiModelProperty("规格属性ID，逗号分隔")
     private String attrIds;
 
+    @ApiModelProperty("规格属性")
+    private String attrText;
 
 }

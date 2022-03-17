@@ -54,20 +54,7 @@ public class ErpSpuService {
     public PageResultDTO<ErpSpuVO> queryByPage(ErpSpuQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         IPage<ErpSpuVO> voList = erpSpuDao.queryByPage(page, queryDTO);
-
-//        // 补充规格商品的信息
-//        List<String> spuIds = voList.getRecords().stream()
-//                .map(ErpSpuVO::getId).collect(Collectors.toList());
-//        List<ErpSpecVO> specs = erpSpecService.getBySpuIds(spuIds);
-//
-//        voList.getRecords().forEach(p -> {
-//            List<ErpSpecVO> curSpecs = specs.stream()
-//                    .filter(q -> q.getSpuId().equals(p.getId()))
-//                    .collect(Collectors.toList());
-//
-//            p.setSpecs(curSpecs);
-//        });
-
+        
         PageResultDTO<ErpSpuVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
         return pageResultDTO;
     }
