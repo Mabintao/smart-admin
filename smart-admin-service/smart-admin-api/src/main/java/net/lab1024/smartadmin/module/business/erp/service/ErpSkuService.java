@@ -1,7 +1,10 @@
 package net.lab1024.smartadmin.module.business.erp.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
+import net.lab1024.smartadmin.common.exception.SmartBusinessException;
 import net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuAddDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuUpdateDTO;
@@ -26,6 +29,7 @@ import java.util.List;
  * @since JDK1.8
  */
 @Service
+@Slf4j
 public class ErpSkuService {
 
     @Autowired
@@ -34,10 +38,13 @@ public class ErpSkuService {
     @Autowired
     private ErpShelfNoService erpShelfNoService;
 
+    @Autowired
+    private ErpSkuService erpSkuService;
+
     /**
      * 根据id查询
      */
-    public ErpSkuEntity getById(Long id) {
+    public ErpSkuEntity getById(String id) {
         return erpSkuDao.selectById(id);
     }
 
@@ -98,6 +105,33 @@ public class ErpSkuService {
         }
 
         erpSkuDao.batchUpdateOrderNum(skus);
+        return ResponseDTO.succ();
+    }
+
+    public ResponseDTO<String> increaseStock(String skuId, Integer num) {
+        return updateStockBase(skuId, num, true);
+    }
+
+    public ResponseDTO<String> decreaseStock(String skuId, Integer num) {
+        return updateStockBase(skuId, num * -1, true);
+    }
+
+    public ResponseDTO<String> updateStockBase(String skuId, Integer num, Boolean needRedo) {
+        ErpSkuEntity sku = getById(skuId);
+        if (num < 0 && sku.getStock() < num * -1) {
+            throw new SmartBusinessException("库存更新失败，当前库存不足");
+        }
+
+        UpdateWrapper<ErpSkuEntity> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("stock", sku.getStock())
+                .eq("id", sku.getId())
+                .set("stock", sku.getStock() + num);
+
+        int update = erpSkuDao.update(null, updateWrapper);
+        if (update != 1 && needRedo) {
+            erpSkuService.updateStockBase(skuId, num, false);
+        }
+
         return ResponseDTO.succ();
     }
 }
