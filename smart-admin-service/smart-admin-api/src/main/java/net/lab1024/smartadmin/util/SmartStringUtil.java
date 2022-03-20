@@ -1,11 +1,9 @@
 package net.lab1024.smartadmin.util;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 字符串操作类，包括分割，转换，大写首字母
@@ -13,6 +11,12 @@ import java.util.Set;
  * @author jiaozi
  */
 public class SmartStringUtil extends StringUtils {
+
+    public static String genRandomId() {
+        String time = SmartDateUtil.formatYMDHMSSSS(new Date());
+        String guid = IdWorker.get32UUID().replace("-", "");
+        return (time + guid).substring(0, 24);
+    }
 
     // ===============split =======================
 

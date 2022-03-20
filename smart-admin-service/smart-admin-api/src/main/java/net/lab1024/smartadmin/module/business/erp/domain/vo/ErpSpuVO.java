@@ -40,4 +40,13 @@ public class ErpSpuVO {
 
     @ApiModelProperty("货架层数")
     private Integer shelfLayers;
+
+    @ApiModelProperty("商品名称")
+    private String name;
+
+    @ApiModelProperty("商品链接")
+    private String url;
+
+    @ApiModelProperty("图片地址")
+    private String pic_url;
 }

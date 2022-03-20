@@ -1,6 +1,7 @@
 package net.lab1024.smartadmin.module.business.erp.domain.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 更新 [  ]
@@ -13,8 +14,9 @@ import lombok.Data;
  * @since JDK1.8
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ErpSkuUpdateDTO extends ErpSkuAddDTO {
 
-    private Long id;
+    private String id;
 
 }

@@ -19,7 +19,7 @@ public class SmartRequestTokenUtil {
 
     private static final String USER_KEY = "smart_admin_user";
 
-    private static ThreadLocal<RequestTokenBO> RequestUserThreadLocal = new ThreadLocal<RequestTokenBO>();
+    private static ThreadLocal<RequestTokenBO> RequestUserThreadLocal = new ThreadLocal<>();
 
     public static void setUser(HttpServletRequest request, RequestTokenBO requestToken) {
         request.setAttribute(USER_KEY, requestToken);
@@ -34,9 +34,7 @@ public class SmartRequestTokenUtil {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-            if (request != null) {
-                return (RequestTokenBO) request.getAttribute(USER_KEY);
-            }
+            return (RequestTokenBO) request.getAttribute(USER_KEY);
         }
         return null;
     }
@@ -52,7 +50,7 @@ public class SmartRequestTokenUtil {
     public static String getLoginName() {
         RequestTokenBO requestUser = getRequestUser();
         if (requestUser == null) {
-            return null;
+            return "mock user";
         }
         return requestUser.getEmployeeBO().getLoginName();
     }

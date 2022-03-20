@@ -1,6 +1,6 @@
 package net.lab1024.smartadmin.module.business.erp.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
@@ -13,6 +13,7 @@ import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuExcelVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpuVO;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
+import net.lab1024.smartadmin.util.SmartStringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +36,6 @@ public class ErpSpuService {
     @Autowired
     private ErpSpuDao erpSpuDao;
 
-    @Autowired
-    private ErpSkuService erpSpecService;
-
     /**
      * 根据id查询
      */
@@ -52,11 +50,13 @@ public class ErpSpuService {
      * @date 2022-02-13 18:39:02
      */
     public PageResultDTO<ErpSpuVO> queryByPage(ErpSpuQueryDTO queryDTO) {
-        Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        IPage<ErpSpuVO> voList = erpSpuDao.queryByPage(page, queryDTO);
-        
-        PageResultDTO<ErpSpuVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
-        return pageResultDTO;
+        Page<ErpSpuEntity> page = SmartPageUtil.convert2QueryPage(queryDTO);
+        LambdaQueryWrapper<ErpSpuEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SmartStringUtil.isNotEmpty(queryDTO.getId()), ErpSpuEntity::getId, queryDTO.getId());
+        queryWrapper.like(SmartStringUtil.isNotEmpty(queryDTO.getName()), ErpSpuEntity::getName, queryDTO.getName());
+        Page<ErpSpuEntity> pageInfo = erpSpuDao.selectPage(page, queryWrapper);
+
+        return SmartPageUtil.convert2PageResult(pageInfo, pageInfo.getRecords(), ErpSpuVO.class);
     }
 
     /**
@@ -65,6 +65,7 @@ public class ErpSpuService {
      * @author matt
      * @date 2022-02-13 18:39:02
      */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> add(ErpSpuAddDTO addDTO) {
         ErpSpuEntity entity = SmartBeanUtil.copy(addDTO, ErpSpuEntity.class);
         erpSpuDao.insert(entity);

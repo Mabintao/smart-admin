@@ -1,8 +1,8 @@
 package net.lab1024.smartadmin.module.business.erp.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.lab1024.smartadmin.common.mybatis.SmartBaseMapper;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSpecQueryDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpSpecEntity;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecExcelVO;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Mapper
 @Component
-public interface ErpSpecDao extends BaseMapper<ErpSpecEntity> {
+public interface ErpSpecDao extends SmartBaseMapper<ErpSpecEntity> {
 
     /**
      * 分页查询

@@ -34,21 +34,28 @@ import java.util.List;
 public class ErpSkuService {
 
     @Autowired
-    private ErpSkuDao erpSpecDao;
+    private ErpSkuDao erpSkuDao;
 
     /**
      * 根据id查询
      */
     public ErpSkuEntity getById(Long id) {
-        return erpSpecDao.selectById(id);
+        return erpSkuDao.selectById(id);
     }
 
 
     public List<ErpSkuVO> getBySpuIds(List<String> spuIds) {
         LambdaQueryWrapper<ErpSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(ErpSkuEntity::getSpuId, spuIds);
-        List<ErpSkuEntity> result = erpSpecDao.selectList(queryWrapper);
+        List<ErpSkuEntity> result = erpSkuDao.selectList(queryWrapper);
         return SmartBeanUtil.copyList(result, ErpSkuVO.class);
+    }
+
+    public ResponseDTO<String> batchInsert(List<ErpSkuAddDTO> addDTOList) {
+        List<ErpSkuEntity> skuList = SmartBeanUtil.copyList(addDTOList, ErpSkuEntity.class);
+        erpSkuDao.insertBatchSomeColumn(skuList);
+
+        return ResponseDTO.succ();
     }
 
     /**
@@ -59,7 +66,7 @@ public class ErpSkuService {
      */
     public ResponseDTO<PageResultDTO<ErpSkuVO>> queryByPage(ErpSkuQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        IPage<ErpSkuVO> voList = erpSpecDao.queryByPage(page, queryDTO);
+        IPage<ErpSkuVO> voList = erpSkuDao.queryByPage(page, queryDTO);
         PageResultDTO<ErpSkuVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
         return ResponseDTO.succData(pageResultDTO);
     }
@@ -72,7 +79,7 @@ public class ErpSkuService {
      */
     public ResponseDTO<String> add(ErpSkuAddDTO addDTO) {
         ErpSkuEntity entity = SmartBeanUtil.copy(addDTO, ErpSkuEntity.class);
-        erpSpecDao.insert(entity);
+        erpSkuDao.insert(entity);
         return ResponseDTO.succ();
     }
 
@@ -85,7 +92,7 @@ public class ErpSkuService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> update(ErpSkuUpdateDTO updateDTO) {
         ErpSkuEntity entity = SmartBeanUtil.copy(updateDTO, ErpSkuEntity.class);
-        erpSpecDao.updateById(entity);
+        erpSkuDao.updateById(entity);
         return ResponseDTO.succ();
     }
 
@@ -97,7 +104,7 @@ public class ErpSkuService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> deleteByIds(List<Long> idList) {
-        erpSpecDao.deleteByIdList(idList);
+        erpSkuDao.deleteByIdList(idList);
         return ResponseDTO.succ();
     }
 
@@ -108,7 +115,7 @@ public class ErpSkuService {
      * @date 2022-02-13 18:40:06
      */
     public List<ErpSkuExcelVO> queryAllExportData(ErpSkuQueryDTO queryDTO) {
-        return erpSpecDao.queryAllExportData(queryDTO);
+        return erpSkuDao.queryAllExportData(queryDTO);
     }
 
     /**
@@ -118,6 +125,6 @@ public class ErpSkuService {
      * @date 2022-02-13 18:40:06
      */
     public List<ErpSkuExcelVO> queryBatchExportData(List<Long> idList) {
-        return erpSpecDao.queryBatchExportData(idList);
+        return erpSkuDao.queryBatchExportData(idList);
     }
 }

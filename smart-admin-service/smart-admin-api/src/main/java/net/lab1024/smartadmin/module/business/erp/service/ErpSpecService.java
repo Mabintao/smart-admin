@@ -119,6 +119,13 @@ public class ErpSpecService {
         return ResponseDTO.succ();
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<String> batchInsert(List<ErpSpecAddDTO> addList) {
+        List<ErpSpecEntity> specList = SmartBeanUtil.copyList(addList, ErpSpecEntity.class);
+        erpSkuDao.insertBatchSomeColumn(specList);
+        return ResponseDTO.succ();
+    }
+
     /**
      * 编辑
      *
@@ -163,4 +170,5 @@ public class ErpSpecService {
     public List<ErpSpecExcelVO> queryBatchExportData(List<Long> idList) {
         return erpSkuDao.queryBatchExportData(idList);
     }
+
 }

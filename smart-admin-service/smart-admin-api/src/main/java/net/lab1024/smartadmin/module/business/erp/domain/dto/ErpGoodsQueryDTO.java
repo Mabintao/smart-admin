@@ -2,6 +2,7 @@ package net.lab1024.smartadmin.module.business.erp.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.lab1024.smartadmin.common.domain.PageParamDTO;
 
 /**
@@ -15,7 +16,11 @@ import net.lab1024.smartadmin.common.domain.PageParamDTO;
  * @since JDK1.8
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ErpGoodsQueryDTO extends PageParamDTO {
     @ApiModelProperty("规格ID")
     private String id;
+
+    @ApiModelProperty("名称")
+    private String name;
 }

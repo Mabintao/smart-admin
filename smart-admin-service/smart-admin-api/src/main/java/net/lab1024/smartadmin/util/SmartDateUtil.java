@@ -15,12 +15,7 @@ import java.util.*;
  */
 public class SmartDateUtil extends DateUtils {
 
-    private static final ThreadLocal<DateFormats> dateFormats = new ThreadLocal<DateFormats>() {
-        @Override
-        protected DateFormats initialValue() {
-            return new DateFormats();
-        }
-    };
+    private static final ThreadLocal<DateFormats> dateFormats = ThreadLocal.withInitial(() -> new DateFormats());
 
     public static final int HOUR_MIN = 60;
 
@@ -64,6 +59,10 @@ public class SmartDateUtil extends DateUtils {
 
     public static String formatYMDSlash(Date date) {
         return dateFormats.get().ymdSlash.format(date);
+    }
+
+    public static String formatYMDHMSSSS(Date date) {
+        return dateFormats.get().ymdhmssssDigital.format(date);
     }
 
     public static Date parseYMD(String dateStr) {
@@ -172,10 +171,10 @@ public class SmartDateUtil extends DateUtils {
     /**
      * 设置Calendar的小时、分钟、秒、毫秒
      *
-     * @param calendar 日历
-     * @param hour 小时
-     * @param minute 分钟
-     * @param second 秒
+     * @param calendar    日历
+     * @param hour        小时
+     * @param minute      分钟
+     * @param second      秒
      * @param milliSecond 毫秒
      */
     public static void setCalender(Calendar calendar, int hour, int minute, int second, int milliSecond) {
@@ -235,7 +234,7 @@ public class SmartDateUtil extends DateUtils {
         calendar.setTime(getDayEnd(date));
         calendar.add(Calendar.MONTH, 1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.add(Calendar.DAY_OF_MONTH, - 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
         return calendar.getTime();
     }
 
@@ -415,7 +414,7 @@ public class SmartDateUtil extends DateUtils {
     public static Date getBeginDayOfYesterday() {
         Calendar cal = new GregorianCalendar();
         cal.setTime(getDayBegin(new Date()));
-        cal.add(Calendar.DAY_OF_MONTH, - 1);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         return cal.getTime();
     }
 
@@ -427,7 +426,7 @@ public class SmartDateUtil extends DateUtils {
     public static Date getEndDayOfYesterDay() {
         Calendar cal = new GregorianCalendar();
         cal.setTime(getDayEnd(new Date()));
-        cal.add(Calendar.DAY_OF_MONTH, - 1);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         return cal.getTime();
     }
 
@@ -515,6 +514,8 @@ class DateFormats {
     public final SimpleDateFormat ymdDigital = new SimpleDateFormat("yyyyMMdd");
 
     public final SimpleDateFormat ymdhmsDigital = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    public final SimpleDateFormat ymdhmssssDigital = new SimpleDateFormat("yyMMddHHmmssSSS");
 
     public static final String ymdh = "yyyy-MM-dd HH";
 }
