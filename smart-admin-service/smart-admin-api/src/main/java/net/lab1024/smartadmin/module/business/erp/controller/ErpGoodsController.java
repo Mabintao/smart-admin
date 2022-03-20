@@ -9,10 +9,13 @@ import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.constant.SwaggerTagConst;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsAddDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsQueryDTO;
+import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpGoodsUpdateDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsVO;
 import net.lab1024.smartadmin.module.business.erp.service.ErpGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * [  ]
@@ -48,8 +51,16 @@ public class ErpGoodsController extends BaseController {
     @ApiOperation(value = "商品添加")
     @NoNeedLogin
     @PostMapping("/erpGoods/add")
-    public ResponseDTO<String> addGoods(@RequestBody ErpGoodsAddDTO addDTO) {
+    public ResponseDTO<String> addGoods(@Valid @RequestBody ErpGoodsAddDTO addDTO) {
         return erpGoodsService.addGoods(addDTO);
+    }
+
+
+    @ApiOperation(value = "商品编辑")
+    @NoNeedLogin
+    @PostMapping("/erpGoods/edit")
+    public ResponseDTO<String> editGoods(@RequestBody ErpGoodsUpdateDTO updateDTO) {
+        return erpGoodsService.editGoods(updateDTO);
     }
 
 

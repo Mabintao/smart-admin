@@ -1,7 +1,7 @@
 package net.lab1024.smartadmin.module.business.erp.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 更新 [  ]
@@ -14,9 +14,19 @@ import lombok.EqualsAndHashCode;
  * @since JDK1.8
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ErpSkuUpdateDTO extends ErpSkuAddDTO {
-
+public class ErpSkuUpdateDTO {
+    @ApiModelProperty("id")
     private String id;
 
+    @ApiModelProperty("重量")
+    private Integer weight;
+
+    @ApiModelProperty("最小单位系数")
+    private Integer coefficient;
+
+    @ApiModelProperty("库存（最小单位）")
+    private Integer stock;
+
+    @ApiModelProperty("采购价/分")
+    private Integer purchasePrice;
 }

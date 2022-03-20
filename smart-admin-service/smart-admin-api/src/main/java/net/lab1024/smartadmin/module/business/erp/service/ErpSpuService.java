@@ -39,7 +39,7 @@ public class ErpSpuService {
     /**
      * 根据id查询
      */
-    public ErpSpuEntity getById(Long id) {
+    public ErpSpuEntity getById(String id) {
         return erpSpuDao.selectById(id);
     }
 

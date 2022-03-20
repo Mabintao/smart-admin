@@ -1,23 +1,18 @@
 package net.lab1024.smartadmin.module.business.erp.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuAddDTO;
-import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuQueryDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.ErpSkuUpdateDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpSkuEntity;
-import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuExcelVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
-import net.lab1024.smartadmin.util.SmartPageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,6 +31,9 @@ public class ErpSkuService {
     @Autowired
     private ErpSkuDao erpSkuDao;
 
+    @Autowired
+    private ErpShelfNoService erpShelfNoService;
+
     /**
      * 根据id查询
      */
@@ -44,13 +42,30 @@ public class ErpSkuService {
     }
 
 
+    /**
+     * 根据主商品Id查询
+     *
+     * @param spuIds
+     * @return
+     */
     public List<ErpSkuVO> getBySpuIds(List<String> spuIds) {
-        LambdaQueryWrapper<ErpSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(ErpSkuEntity::getSpuId, spuIds);
-        List<ErpSkuEntity> result = erpSkuDao.selectList(queryWrapper);
+        List<ErpSkuEntity> result = getEntityBySpuIds(spuIds);
         return SmartBeanUtil.copyList(result, ErpSkuVO.class);
     }
 
+    private List<ErpSkuEntity> getEntityBySpuIds(List<String> spuIds) {
+        LambdaQueryWrapper<ErpSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ErpSkuEntity::getSpuId, spuIds);
+        List<ErpSkuEntity> result = erpSkuDao.selectList(queryWrapper);
+        return result;
+    }
+
+    /**
+     * 批量新增
+     *
+     * @param addDTOList
+     * @return
+     */
     public ResponseDTO<String> batchInsert(List<ErpSkuAddDTO> addDTOList) {
         List<ErpSkuEntity> skuList = SmartBeanUtil.copyList(addDTOList, ErpSkuEntity.class);
         erpSkuDao.insertBatchSomeColumn(skuList);
@@ -59,72 +74,30 @@ public class ErpSkuService {
     }
 
     /**
-     * 分页查询
+     * 批量更新
      *
-     * @author matt
-     * @date 2022-02-13 18:40:06
-     */
-    public ResponseDTO<PageResultDTO<ErpSkuVO>> queryByPage(ErpSkuQueryDTO queryDTO) {
-        Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        IPage<ErpSkuVO> voList = erpSkuDao.queryByPage(page, queryDTO);
-        PageResultDTO<ErpSkuVO> pageResultDTO = SmartPageUtil.convert2PageResult(voList);
-        return ResponseDTO.succData(pageResultDTO);
-    }
-
-    /**
-     * 添加
-     *
-     * @author matt
-     * @date 2022-02-13 18:40:06
-     */
-    public ResponseDTO<String> add(ErpSkuAddDTO addDTO) {
-        ErpSkuEntity entity = SmartBeanUtil.copy(addDTO, ErpSkuEntity.class);
-        erpSkuDao.insert(entity);
-        return ResponseDTO.succ();
-    }
-
-    /**
-     * 编辑
-     *
-     * @author matt
-     * @date 2022-02-13 18:40:06
+     * @param updateList
+     * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO<String> update(ErpSkuUpdateDTO updateDTO) {
-        ErpSkuEntity entity = SmartBeanUtil.copy(updateDTO, ErpSkuEntity.class);
-        erpSkuDao.updateById(entity);
+    public ResponseDTO<String> updateBatch(List<ErpSkuUpdateDTO> updateList) {
+        List<ErpSkuEntity> updateEntities = SmartBeanUtil.copyList(updateList, ErpSkuEntity.class);
+        erpSkuDao.batchUpdate(updateEntities);
+
         return ResponseDTO.succ();
     }
 
-    /**
-     * 删除
-     *
-     * @author matt
-     * @date 2022-02-13 18:40:06
-     */
+
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO<String> deleteByIds(List<Long> idList) {
-        erpSkuDao.deleteByIdList(idList);
+    public ResponseDTO<String> updateShelfNum(String spuId, Integer layer) {
+        List<ErpSkuEntity> skus = getEntityBySpuIds(Arrays.asList(spuId));
+        List<Long> nos = erpShelfNoService.genShelvesNos(layer, skus.size());
+        for (ErpSkuEntity en : skus) {
+            int index = skus.indexOf(en);
+            en.setOrderNum(String.format("%s-%d", layer, nos.get(index)));
+        }
+
+        erpSkuDao.batchUpdateOrderNum(skus);
         return ResponseDTO.succ();
-    }
-
-    /**
-     * 查询全部导出对象
-     *
-     * @author matt
-     * @date 2022-02-13 18:40:06
-     */
-    public List<ErpSkuExcelVO> queryAllExportData(ErpSkuQueryDTO queryDTO) {
-        return erpSkuDao.queryAllExportData(queryDTO);
-    }
-
-    /**
-     * 批量查询导出对象
-     *
-     * @author matt
-     * @date 2022-02-13 18:40:06
-     */
-    public List<ErpSkuExcelVO> queryBatchExportData(List<Long> idList) {
-        return erpSkuDao.queryBatchExportData(idList);
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSpecDao">
+<mapper namespace="net.lab1024.smartadmin.module.business.erp.dao.ErpSkuDao">
 
     <resultMap id="ErpSkuVO"
-               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecVO"></resultMap>
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO"></resultMap>
     <resultMap id="ErpSkuExcelVO"
-               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecExcelVO"></resultMap>
+               type="net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuExcelVO"></resultMap>
 
 
     <select id="queryByPage" resultMap="ErpSkuVO">
@@ -74,4 +74,20 @@
         </foreach>
     </delete>
 
+    <update id="batchUpdate">
+        <foreach collection="updateList" item="item" index="index" separator=";">
+            UPDATE t_erp_sku
+            SET
+            `weight`=#{item.weight},`coefficient`=#{item.coefficient},stock=#{item.stock},purchase_price=#{item.purchasePrice}
+            WHERE `id` = #{item.id}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateOrderNum">
+        <foreach collection="updateList" item="item" index="index" separator=";">
+            UPDATE t_erp_sku
+            SET order_num=#{item.orderNum}
+            WHERE `id` = #{item.id}
+        </foreach>
+    </update>
 </mapper>

@@ -12,7 +12,7 @@
         d.name,
         d.short_name,
         d.manager_id,
-        d.parent_id,
+        d.parent_ide,
         d.sort,
         d.update_time,
         d.create_time

@@ -4,6 +4,7 @@ import net.lab1024.smartadmin.common.constant.ResponseCodeConst;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.erp.domain.dto.*;
+import net.lab1024.smartadmin.module.business.erp.domain.entity.ErpSpuEntity;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpGoodsVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSkuVO;
 import net.lab1024.smartadmin.module.business.erp.domain.vo.ErpSpecVO;
@@ -167,7 +168,6 @@ public class ErpGoodsService {
         List<ErpSkuAddDTO> skus = specCombines.stream().map(p -> {
             int index = specCombines.indexOf(p);
             String orderNum = String.format("%s-%d", addDTO.getSpu().getShelfLayers(), shelfNos.get(index));
-            
             return initSku(addDTO.getSpu().getId(), index, orderNum, p);
         }).collect(Collectors.toList());
 
@@ -187,5 +187,23 @@ public class ErpGoodsService {
                 .stock(0)
                 .weight(0)
                 .build();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<String> editGoods(ErpGoodsUpdateDTO updateDTO) {
+        ErpSpuEntity spu = spuService.getById(updateDTO.getSpu().getId());
+        boolean needUpdateShelfNum = false;
+        if (!spu.getShelfLayers().equals(updateDTO.getSpu().getShelfLayers())) {
+            needUpdateShelfNum = true;
+        }
+
+        spuService.update(updateDTO.getSpu());
+        skuService.updateBatch(updateDTO.getSkus());
+
+        if (needUpdateShelfNum) {
+            skuService.updateShelfNum(updateDTO.getSpu().getId(), updateDTO.getSpu().getShelfLayers());
+        }
+
+        return ResponseDTO.succ();
     }
 }

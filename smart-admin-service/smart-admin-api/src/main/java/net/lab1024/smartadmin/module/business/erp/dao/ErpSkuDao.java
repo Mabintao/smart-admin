@@ -66,4 +66,8 @@ public interface ErpSkuDao extends SmartBaseMapper<ErpSkuEntity> {
      * @return
      */
     List<ErpSkuExcelVO> queryBatchExportData(@Param("idList") List<Long> idList);
+
+    void batchUpdate(@Param("updateList") List<ErpSkuEntity> updateList);
+
+    void batchUpdateOrderNum(@Param("updateList") List<ErpSkuEntity> updateList);
 }

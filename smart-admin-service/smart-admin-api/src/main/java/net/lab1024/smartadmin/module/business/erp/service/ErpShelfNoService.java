@@ -30,8 +30,7 @@ public class ErpShelfNoService {
         }
 
         erpShelvesNoDao.insertBatchSomeColumn(addList);
-
-        return addList.stream().map(ErpShelfNoEntity::getNo).collect(Collectors.toList());
+        return addList.stream().map(ErpShelfNoEntity::getNo).sorted().collect(Collectors.toList());
     }
 
     private Long getMaxByLayer(Integer level) {
